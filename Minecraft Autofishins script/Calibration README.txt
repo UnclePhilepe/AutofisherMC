@@ -1,0 +1,1 @@
+The mouse calibration script is for grabbing specific X,Y coordinates on your monitor for the blue tracking box on the main fashing script.
