@@ -57,12 +57,7 @@ Bottom-right (X2, Y2): {bottom_right}")
 
 ### 2. **Auto-Fishing Script**
 1. Adjust the `BOBBER_SEARCH_AREA` in the script using the coordinates you obtained from the calibration script.
-2. Run the script:
-
-```bash
-python FishingScript.py
-```
-
+2. Run the script
 3. The fishing process will start automatically, showing a live feed for detection. You can stop the script by pressing `CTRL+C` in the terminal or `CTRL+SHIFT+S` in-game, which will save a log file (`fishing_log.txt`) containing the reasons for each reeling in and recasting event.
 
 ## Logging
