@@ -8,7 +8,7 @@ This script automates the process of fishing in Minecraft Bedrock Edition. It de
 - Reels in the fish when the bobber moves downward or disappears.
 - Automatically re-casts the fishing rod after reeling in.
 - Logs events such as reeling in and re-casting, including reasons for these actions.
-- Can be stopped gracefully without killing the process, ensuring all actions are logged.
+- Can be stopped without killing the process, ensuring all actions are logged.
 
 ## Requirements
 - Python 3.8+
