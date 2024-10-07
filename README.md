@@ -60,7 +60,7 @@ Bottom-right (X2, Y2): {bottom_right}")
 2. Run the script:
 
 ```bash
-python auto_fishing.py
+python FishingScript.py
 ```
 
 3. The fishing process will start automatically, showing a live feed for detection. You can stop the script by pressing `CTRL+C` in the terminal or `CTRL+SHIFT+S` in-game, which will save a log file (`fishing_log.txt`) containing the reasons for each reeling in and recasting event.
