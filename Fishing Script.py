@@ -7,9 +7,13 @@ import os
 from dotenv import load_dotenv
 from screeninfo import get_monitors
 import mss
+import logging
+import signal
+import sys
+import keyboard  # New import for global hotkeys
 
 # Load the .env file manually
-dotenv_path = r"C:\Users\John\Desktop\.env"  # Env table for previous version (unused)
+dotenv_path = r"C:\\Users\\John\\Desktop\\.env"  # Env table for previous version (unused)
 load_dotenv(dotenv_path)
 
 # Define the region of interest (ROI) based on your coordinates
@@ -32,6 +36,17 @@ vertical_movement_threshold = 25  # Minimum downward movement in pixels to trigg
 consecutive_downward_movements_required = 3
 downward_movements_counter = 0
 
+# Event to stop the script
+stop_event = threading.Event()
+
+# Clear the log file at the start of each run
+log_file = "fishing_log.txt"
+with open(log_file, "w"):  # Opening in write mode clears the file
+    pass
+
+# Set up logging
+logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s - %(message)s')
+
 # Get monitor information using screeninfo
 monitors = get_monitors()
 monitor_index = 1  # Adjust if needed
@@ -42,6 +57,19 @@ second_monitor_y_offset = second_monitor.y
 # Variable to track last known vertical position of the bobber
 last_bobber_position = None
 
+def signal_handler(sig, frame):
+    """Handle the signal to stop the script gracefully."""
+    print("Stopping script... Please wait for logs to be saved.")
+    stop_event.set()
+
+def on_stop_keypress():
+    """Function to be called when the stop key combination is pressed."""
+    print("Global stop key pressed.")
+    stop_event.set()
+
+# Register the global key combination (CTRL+SHIFT+S) to stop the script
+keyboard.add_hotkey('ctrl+shift+s', on_stop_keypress)
+
 def capture_screen():
     """Capture the screen and display the live feed with red bobber detection."""
     cv2.namedWindow("Minecraft Autofishing Feed", cv2.WINDOW_NORMAL)
@@ -50,7 +78,7 @@ def capture_screen():
 
     with mss.mss() as sct:
         monitor = sct.monitors[1]  # Adjust if necessary
-        while True:
+        while not stop_event.is_set():
             screenshot = sct.grab(monitor)
             screen_np = np.array(screenshot)
             frame = cv2.cvtColor(screen_np, cv2.COLOR_BGRA2BGR)
@@ -90,15 +118,13 @@ def capture_screen():
 
 def cast_fishing_rod():
     """Simulate a right-click to cast the fishing rod."""
-    print("Casting fishing rod...")
+    logging.info("Casting fishing rod.")
     pyautogui.click(button='right')
-    print("Fishing rod cast out.")
 
-def reel_in_fish():
-    """Simulate a right-click to reel in the fish."""
-    print("Reeling in the fish...")
+def reel_in_fish(reason):
+    """Simulate a right-click to reel in the fish and log the reason."""
+    logging.info(f"Reeling in the fish. Reason: {reason}")
     pyautogui.click(button='right')
-    print("Fish reeled in.")
 
 def detect_bobber():
     """Detect the presence and position of the red bobber."""
@@ -139,7 +165,7 @@ def auto_fish():
     capture_thread.daemon = True
     capture_thread.start()
 
-    while True:
+    while not stop_event.is_set():
         # Cast the fishing rod
         cast_fishing_rod()
 
@@ -148,7 +174,7 @@ def auto_fish():
 
         time_of_last_bobber_detection = time.time()
 
-        while True:
+        while not stop_event.is_set():
             # Detect if the bobber is visible and get its vertical position
             bobber_detected, bobber_vertical_position = detect_bobber()
 
@@ -163,8 +189,7 @@ def auto_fish():
                         # Increment counter for consecutive downward movements
                         downward_movements_counter += 1
                         if downward_movements_counter >= consecutive_downward_movements_required:
-                            print("Sudden vertical downward movement detected. Reeling in immediately...")
-                            reel_in_fish()
+                            reel_in_fish("Sudden vertical downward movement detected")
                             downward_movements_counter = 0  # Reset the counter
                             break  # Exit the inner loop to immediately recast the rod
                     else:
@@ -177,18 +202,18 @@ def auto_fish():
                 # Check how long the bobber has been lost
                 time_since_last_detection = time.time() - time_of_last_bobber_detection
                 if time_since_last_detection > lost_bobber_threshold:
-                    # Bobber has been lost for more than the threshold, reel in
-                    print("Bobber lost for more than 0.5 seconds. Reeling in...")
-                    reel_in_fish()
+                    reel_in_fish("Bobber lost for more than 0.5 seconds")
                     break  # Exit the inner loop to immediately recast the rod
 
             # Wait for a short time before checking again
             time.sleep(0.1)
 
         # Immediately recast the fishing rod after reeling in
-        print("Recasting the rod immediately...")
+        logging.info("Recasting the rod immediately.")
         cast_fishing_rod()
 
 if __name__ == "__main__":
+    # Set up the signal handler to stop the script with CTRL+C
+    signal.signal(signal.SIGINT, signal_handler)
     print("Starting auto-fishing with continuous casting and immediate recast after reeling...")
     auto_fish()
