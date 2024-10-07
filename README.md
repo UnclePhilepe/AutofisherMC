@@ -1,7 +1,7 @@
 
 # Minecraft Bedrock Edition Auto-Fishing Script
 
-This script automates the process of fishing in Minecraft Bedrock Edition. It detects the bobber based on color and reels in the fish automatically when it detects specific conditions, such as the bobber moving or disappearing. The script also provides a graceful way to stop and log events during fishing sessions.
+This script automates the process of fishing in Minecraft Bedrock Edition. It detects the bobber based on color and reels in the fish automatically when it detects specific conditions, such as the bobber moving or disappearing. This is a little personal project and is not setup for wide use. Feel free to customize to you own specific setup.
 
 ## Features
 - Detects the bobber using screen capture and HSV color filtering.
@@ -63,7 +63,7 @@ Bottom-right (X2, Y2): {bottom_right}")
 python auto_fishing.py
 ```
 
-3. The fishing process will start automatically, showing a live feed for detection. You can stop the script gracefully by pressing `CTRL+C` in the terminal, which will save a log file (`fishing_log.txt`) containing the reasons for each reeling in and recasting event.
+3. The fishing process will start automatically, showing a live feed for detection. You can stop the script by pressing `CTRL+C` in the terminal or `CTRL+SHIFT+S` in-game, which will save a log file (`fishing_log.txt`) containing the reasons for each reeling in and recasting event.
 
 ## Logging
 The script logs the following events:
@@ -74,7 +74,7 @@ The script logs the following events:
 The logs are saved to `fishing_log.txt` in the same directory as the script.
 
 ## Shutdown
-To stop the script , press `CTRL+C` in the terminalor `CTRL+SHIFT+S` in-game. The script will stop capturing, save the log file, and exit cleanly.
+To stop the script , press `CTRL+C` in the terminal or `CTRL+SHIFT+S` in-game. The script will stop capturing, save the log file, and exit cleanly.
 
 ## Known Issues
 Bobber Detection Fails: If the bobber is not detected consistently, you may need to adjust the BOBBER_SEARCH_AREA or the HSV color range.
