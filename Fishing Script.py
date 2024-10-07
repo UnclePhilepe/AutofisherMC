@@ -213,7 +213,7 @@ def auto_fish():
         cast_fishing_rod()
 
 if __name__ == "__main__":
-    # Set up the signal handler to stop the script with CTRL+C
+    # Set up the signal handler to stop the script with CTRL+SHIFT+S
     signal.signal(signal.SIGINT, signal_handler)
     print("Starting auto-fishing with continuous casting and immediate recast after reeling...")
     auto_fish()
