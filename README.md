@@ -73,5 +73,10 @@ The script logs the following events:
 
 The logs are saved to `fishing_log.txt` in the same directory as the script.
 
-## Graceful Shutdown
-To stop the script gracefully, press `CTRL+C` in the terminal. The script will stop capturing, save the log file, and exit cleanly.
+## Shutdown
+To stop the script , press `CTRL+C` in the terminalor `CTRL+SHIFT+S` in-game. The script will stop capturing, save the log file, and exit cleanly.
+
+## Known Issues
+Bobber Detection Fails: If the bobber is not detected consistently, you may need to adjust the BOBBER_SEARCH_AREA or the HSV color range.
+Single Monitor Setup: The script is optimized for a two-monitor setup, displaying the feed on the secondary monitor. You may need to adjust the monitor index for a single monitor setup.
+Screen Flicker: If you display the overlay that shows where the script is looking there is a flicker.
